@@ -102,8 +102,9 @@
   </div>
 
   <div class="module">
-    <h2>3. Rekonstruktionseinheit</h2>
+    <h2>3. Rekonstruktionseinheit (3D + KI-Simulation)</h2>
     <canvas id="rekonstruktionCanvas"></canvas>
+    <div id="aiReaktion" style="margin-top: 1rem; font-size: 1.1rem;"></div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
@@ -155,6 +156,7 @@
 
       document.getElementById("datenOutput").textContent = JSON.stringify(daten, null, 2);
       rekonstruieren(daten);
+      kiLogik(daten);
     }
 
     function rekonstruieren(daten) {
@@ -173,6 +175,16 @@
       apple.scale.set(skalen[daten.größe], skalen[daten.größe], skalen[daten.größe]);
 
       apple.material.roughness = daten.textur === "Rau" ? 1 : 0.3;
+    }
+
+    function kiLogik(daten) {
+      // Einfaches KI-Modul (regelbasiert):
+      let botsprache = `Ich habe die molekulare Signatur ${daten.molekularCode} gelesen.\n`;
+      botsprache += `Dieser Apfel ist ${daten.farbe.toLowerCase()}, ${daten.größe.toLowerCase()}, hat eine ${daten.textur.toLowerCase()}e Oberfläche.\n`;
+      botsprache += `Er schmeckt vermutlich ${daten.geschmack} und riecht ${daten.duft}.\n`;
+      botsprache += `Ich habe den Apfel erfolgreich virtuell materialisiert.`;
+
+      document.getElementById("aiReaktion").textContent = botsprache;
     }
 
     window.onload = init3D;
