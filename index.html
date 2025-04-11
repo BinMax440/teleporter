@@ -87,12 +87,20 @@
         </select>
       </div>
       <div>
-        <label for="geschmack">Geschmack</label>
+        <label for="geruch">Geruch (Molekülmuster)</label>
+        <input type="text" id="geruch" placeholder="z.B. frisch, fruchtig" />
+      </div>
+      <div>
+        <label for="geschmack">Geschmack (z.B. Zuckergehalt)</label>
         <input type="text" id="geschmack" placeholder="z.B. süß, sauer" />
       </div>
       <div>
-        <label for="duft">Duft</label>
-        <input type="text" id="duft" placeholder="z.B. frisch, fruchtig" />
+        <label for="dichte">Dichte (Masseverteilung)</label>
+        <input type="text" id="dichte" placeholder="z.B. leicht, schwer" />
+      </div>
+      <div>
+        <label for="temperaturleitfähigkeit">Temperaturleitfähigkeit</label>
+        <input type="text" id="temperaturleitfähigkeit" placeholder="z.B. kalt, warm" />
       </div>
     </div>
     <button onclick="scanneApfel()" style="margin-top: 1rem">Scannen & Enkodieren</button>
@@ -149,15 +157,19 @@
       const farbe = document.getElementById("farbe").value;
       const größe = document.getElementById("größe").value;
       const textur = document.getElementById("textur").value;
+      const geruch = document.getElementById("geruch").value;
       const geschmack = document.getElementById("geschmack").value;
-      const duft = document.getElementById("duft").value;
+      const dichte = document.getElementById("dichte").value;
+      const temperaturleitfähigkeit = document.getElementById("temperaturleitfähigkeit").value;
 
       const daten = {
         farbe,
         größe,
         textur,
+        geruch,
         geschmack,
-        duft,
+        dichte,
+        temperaturleitfähigkeit,
         molekularCode: `APL-${farbe[0]}${größe[0]}${textur[0]}-${Math.floor(Math.random()*9999)}`
       };
 
@@ -207,7 +219,7 @@
     function kiLogik(daten) {
       let botsprache = `Ich habe die molekulare Signatur ${daten.molekularCode} gelesen.\n`;
       botsprache += `Dieser Apfel ist ${daten.farbe.toLowerCase()}, ${daten.größe.toLowerCase()}, hat eine ${daten.textur.toLowerCase()}e Oberfläche.\n`;
-      botsprache += `Er schmeckt vermutlich ${daten.geschmack} und riecht ${daten.duft}.\n`;
+      botsprache += `Er schmeckt vermutlich ${daten.geschmack} und riecht ${daten.geruch}.\n`;
       botsprache += `Ich habe den Apfel erfolgreich virtuell materialisiert.`;
 
       document.getElementById("aiReaktion").textContent = botsprache;
