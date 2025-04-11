@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hypothetische Apfel-Übertragung</title>
+  <title>Apfel-Übertragungseinheit</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -57,7 +57,7 @@
   </style>
 </head>
 <body>
-  <h1>Neuartige Apfel-Übertragungseinheit</h1>
+  <h1>Apfel-Übertragungseinheit</h1>
   
   <!-- Apfel-Scanner -->
   <div class="module">
@@ -114,9 +114,8 @@
 
   <!-- Rekonstruktionseinheit -->
   <div class="module">
-    <h2>3. Rekonstruktionseinheit (3D + KI-Simulation)</h2>
-    <canvas id="rekonstruktionCanvas"></canvas>
-    <div id="aiReaktion" style="margin-top: 1rem; font-size: 1.1rem;"></div>
+    <h2>3. Rekonstruktionseinheit (3D)</h2>
+    <canvas id="rekonstruktionCanvas" width="600" height="600"></canvas>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
@@ -127,10 +126,10 @@
     function init3D() {
       const canvas = document.getElementById('rekonstruktionCanvas');
       scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / 600, 0.1, 1000);
+      camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
 
       renderer = new THREE.WebGLRenderer({ canvas });
-      renderer.setSize(window.innerWidth * 0.8, 600);
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
       const light = new THREE.PointLight(0xffffff, 1, 100);
       light.position.set(10, 10, 10);
@@ -173,27 +172,9 @@
         molekularCode: `APL-${farbe[0]}${größe[0]}${textur[0]}-${Math.floor(Math.random()*9999)}`
       };
 
+      // Anzeige der kodierten Daten
       document.getElementById("datenOutput").textContent = JSON.stringify(daten, null, 2);
       rekonstruieren(daten);
-      kiLogik(daten);
-
-      // Anfrage an den lokalen Server senden, um das Modell zu generieren
-      fetch("http://localhost:5000/generate_3d_model", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ description: `${daten.farbe} Apfel ${daten.größe}` })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.model_path) {
-          console.log("Modell Pfad: ", data.model_path);
-          // Weitere Logik für die Modellanzeige (z.B. Three.js)
-          // Hier kannst du das 3D-Modell anzeigen, basierend auf dem resultierenden Modellpfad
-        }
-      })
-      .catch(error => console.error('Fehler:', error));
     }
 
     // Rekonstruktion der 3D-Daten
@@ -213,16 +194,6 @@
       apple.scale.set(skalen[daten.größe], skalen[daten.größe], skalen[daten.größe]);
 
       apple.material.roughness = daten.textur === "Rau" ? 1 : 0.3;
-    }
-
-    // KI Logik für das Verständnis der Apfel-Daten
-    function kiLogik(daten) {
-      let botsprache = `Ich habe die molekulare Signatur ${daten.molekularCode} gelesen.\n`;
-      botsprache += `Dieser Apfel ist ${daten.farbe.toLowerCase()}, ${daten.größe.toLowerCase()}, hat eine ${daten.textur.toLowerCase()}e Oberfläche.\n`;
-      botsprache += `Er schmeckt vermutlich ${daten.geschmack} und riecht ${daten.geruch}.\n`;
-      botsprache += `Ich habe den Apfel erfolgreich virtuell materialisiert.`;
-
-      document.getElementById("aiReaktion").textContent = botsprache;
     }
 
     window.onload = init3D;
