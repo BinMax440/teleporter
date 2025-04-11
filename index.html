@@ -58,6 +58,8 @@
 </head>
 <body>
   <h1>Neuartige Apfel-Übertragungseinheit</h1>
+  
+  <!-- Apfel-Scanner -->
   <div class="module">
     <h2>1. Apfel-Scanner</h2>
     <div class="controls">
@@ -96,11 +98,13 @@
     <button onclick="scanneApfel()" style="margin-top: 1rem">Scannen & Enkodieren</button>
   </div>
 
+  <!-- Ausgabe der Enkodierten Binärdaten -->
   <div class="module">
     <h2>2. Enkodierte Binärdaten (neues Format)</h2>
     <pre id="datenOutput">Noch keine Daten...</pre>
   </div>
 
+  <!-- Rekonstruktionseinheit -->
   <div class="module">
     <h2>3. Rekonstruktionseinheit (3D + KI-Simulation)</h2>
     <canvas id="rekonstruktionCanvas"></canvas>
@@ -111,6 +115,7 @@
   <script>
     let scene, camera, renderer, apple;
 
+    // 3D Initialisierung
     function init3D() {
       const canvas = document.getElementById('rekonstruktionCanvas');
       scene = new THREE.Scene();
@@ -132,12 +137,14 @@
       animate();
     }
 
+    // Animation für 3D Apfel
     function animate() {
       requestAnimationFrame(animate);
       apple.rotation.y += 0.01;
       renderer.render(scene, camera);
     }
 
+    // Scannen des Apfels und Senden der Anfrage an den Server
     function scanneApfel() {
       const farbe = document.getElementById("farbe").value;
       const größe = document.getElementById("größe").value;
@@ -157,8 +164,27 @@
       document.getElementById("datenOutput").textContent = JSON.stringify(daten, null, 2);
       rekonstruieren(daten);
       kiLogik(daten);
+
+      // Anfrage an den lokalen Server senden, um das Modell zu generieren
+      fetch("http://localhost:5000/generate_3d_model", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ description: `${daten.farbe} Apfel ${daten.größe}` })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.model_path) {
+          console.log("Modell Pfad: ", data.model_path);
+          // Weitere Logik für die Modellanzeige (z.B. Three.js)
+          // Hier kannst du das 3D-Modell anzeigen, basierend auf dem resultierenden Modellpfad
+        }
+      })
+      .catch(error => console.error('Fehler:', error));
     }
 
+    // Rekonstruktion der 3D-Daten
     function rekonstruieren(daten) {
       const farbwerte = {
         Rot: 0xff0000,
@@ -177,8 +203,8 @@
       apple.material.roughness = daten.textur === "Rau" ? 1 : 0.3;
     }
 
+    // KI Logik für das Verständnis der Apfel-Daten
     function kiLogik(daten) {
-      // Einfaches KI-Modul (regelbasiert):
       let botsprache = `Ich habe die molekulare Signatur ${daten.molekularCode} gelesen.\n`;
       botsprache += `Dieser Apfel ist ${daten.farbe.toLowerCase()}, ${daten.größe.toLowerCase()}, hat eine ${daten.textur.toLowerCase()}e Oberfläche.\n`;
       botsprache += `Er schmeckt vermutlich ${daten.geschmack} und riecht ${daten.duft}.\n`;
