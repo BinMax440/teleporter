@@ -1,235 +1,161 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reality Data Package (RDP) - Scanner und Rekonstruktor</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-        }
-        header h1 {
-            font-size: 36px;
-        }
-        .content {
-            padding: 20px;
-        }
-        .section {
-            margin-bottom: 40px;
-        }
-        .section h2 {
-            color: #2c3e50;
-        }
-        .section p {
-            font-size: 16px;
-        }
-        .code-block {
-            background-color: #f5f5f5;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-family: "Courier New", Courier, monospace;
-            white-space: pre-wrap;
-        }
-        .image-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        .image-container img {
-            width: 40%;
-            margin: 10px;
-        }
-        .file-upload {
-            margin: 20px 0;
-        }
-        .button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .button:hover {
-            background-color: #2980b9;
-        }
-        .dynamic-image {
-            display: block;
-            margin-top: 20px;
-        }
-        #model-container {
-            width: 100%;
-            height: 400px;
-            background-color: #f4f4f4;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apfel Visualisierung und Dateneingabe</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-top: 2rem;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem;
+    }
+    .control {
+      display: flex;
+      flex-direction: column;
+    }
+    select, input, button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    .file-upload {
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Reality Data Package (RDP) - Scanner und Rekonstruktor</h1>
-    </header>
-
-    <div class="content">
-        <!-- Scanner Section -->
-        <div class="section" id="scanner">
-            <h2>1. Der Scanner: Erfassung des Apfels</h2>
-            <p>Der Scanner besteht aus verschiedenen Komponenten, die alle wichtigen Details des Apfels erfassen, um eine vollständige digitale Replikation zu ermöglichen:</p>
-            <ul>
-                <li><b>Laserscanner für 3D-Form</b>: Erfasst die genaue 3D-Form des Apfels.</li>
-                <li><b>Spektralkamera für Farben und Oberflächen</b>: Erfasst die Farbinformationen und Oberflächenstruktur.</li>
-                <li><b>Nano-Textursensor</b>: Bestimmt die Mikrostruktur der Apfelschale.</li>
-                <li><b>Molekularspektrometer</b>: Analysiert die chemische Zusammensetzung des Apfels.</li>
-                <li><b>Duft- und Geschmackssensoren</b>: Misst die Aroma- und Geschmacksstoffe.</li>
-            </ul>
-            <div class="image-container" id="scannerImages">
-                <!-- Dynamische Bilder werden hier geladen -->
-            </div>
-        </div>
-
-        <!-- Rekonstruktor Section -->
-        <div class="section" id="rekonstruktor">
-            <h2>2. Der Rekonstruktor: Reproduktion des Apfels</h2>
-            <p>Der Rekonstruktor nutzt die gesammelten Daten, um den Apfel präzise zu rekonstruieren:</p>
-            <ul>
-                <li><b>3D-Drucker für die Form</b>: Erzeugt die äußere Form des Apfels basierend auf dem 3D-Modell.</li>
-                <li><b>Chemischer Molekular-Drucker</b>: Baut die chemische Struktur des Apfels auf.</li>
-                <li><b>Aromadrucker</b>: Rekonstruiert den Duft und Geschmack des Apfels.</li>
-                <li><b>Sensoren für Textur und Dichte</b>: Überprüfen die Textur und Dichte des Apfels, um die Qualität sicherzustellen.</li>
-            </ul>
-            <div class="image-container" id="rekonstruktorImages">
-                <!-- Dynamische Bilder werden hier geladen -->
-            </div>
-        </div>
-
-        <!-- 3D-Modell des Apfels -->
-        <div class="section" id="model">
-            <h2>3. 3D Modell des Apfels</h2>
-            <p>Sie können das 3D-Modell des Apfels betrachten und interaktiv damit umgehen.</p>
-            <div id="model-container"></div>
-        </div>
-
-        <!-- Upload Section -->
-        <div class="section">
-            <h2>4. Datei hochladen</h2>
-            <p>Laden Sie Ihre eigene 'apple01.rdp' Datei hoch, um den Rekonstruktionsprozess zu simulieren:</p>
-            <input type="file" id="fileUpload" name="fileUpload" class="file-upload">
-            <button class="button" onclick="handleUpload()">Datei hochladen</button>
-        </div>
-
-        <!-- Dynamische Bildanzeige -->
-        <div class="section">
-            <h2>5. Dynamische Bildanzeige</h2>
-            <p>Wählen Sie ein Bild aus, um es in der Anwendung anzuzeigen:</p>
-            <input type="file" id="dynamicImageInput" class="file-upload" onchange="displayImage(event)">
-            <img id="dynamicImage" class="dynamic-image" src="" alt="Dynamisches Bild" style="display:none; width: 50%;">
-        </div>
-
+  <h1>3D Apfel Visualisierung & Dateneingabe</h1>
+  <div class="controls">
+    <div class="control">
+      <label for="color">Farbe:</label>
+      <select id="color">
+        <option value="red">Rot</option>
+        <option value="green">Grün</option>
+        <option value="yellow">Gelb</option>
+      </select>
     </div>
+    <div class="control">
+      <label for="size">Größe:</label>
+      <select id="size">
+        <option value="small">Klein</option>
+        <option value="medium" selected>Mittel</option>
+        <option value="large">Groß</option>
+      </select>
+    </div>
+    <div class="control">
+      <label for="texture">Textur:</label>
+      <select id="texture">
+        <option value="smooth">Glatt</option>
+        <option value="rough">Rau</option>
+      </select>
+    </div>
+    <div class="control">
+      <label for="taste">Geschmack (Beschreibung):</label>
+      <input type="text" id="taste" placeholder="z.B. süß, sauer..." />
+    </div>
+    <div class="control">
+      <button onclick="updateApple()">Aktualisieren</button>
+    </div>
+  </div>
 
-    <footer style="background-color: #333; color: white; text-align: center; padding: 10px;">
-        <p>Reality Data Package - Alle Rechte vorbehalten</p>
-    </footer>
+  <canvas id="appleCanvas"></canvas>
 
-    <!-- Three.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <div class="file-upload">
+    <label for="file">Daten-Datei hochladen:</label>
+    <input type="file" id="file" onchange="handleFileUpload(event)" />
+  </div>
+  <p id="fileInfo"></p>
 
-    <script>
-        // Funktion für Datei-Upload (Simulation)
-        function handleUpload() {
-            let fileInput = document.getElementById('fileUpload');
-            let file = fileInput.files[0];
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
+  <script>
+    let scene, camera, renderer, apple;
 
-            if (file) {
-                alert("Die Datei '" + file.name + "' wurde erfolgreich hochgeladen.");
-            } else {
-                alert("Bitte wählen Sie eine Datei zum Hochladen.");
-            }
-        }
+    function init() {
+      const canvas = document.getElementById('appleCanvas');
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / 600, 0.1, 1000);
 
-        // Dynamische Bildanzeige
-        function displayImage(event) {
-            var image = document.getElementById('dynamicImage');
-            var reader = new FileReader();
+      renderer = new THREE.WebGLRenderer({ canvas });
+      renderer.setSize(window.innerWidth * 0.6, 600);
+      document.body.appendChild(renderer.domElement);
 
-            reader.onload = function(){
-                image.src = reader.result;
-                image.style.display = "block"; // Bild anzeigen
-            }
+      const light = new THREE.PointLight(0xffffff, 1, 100);
+      light.position.set(10, 10, 10);
+      scene.add(light);
 
-            reader.readAsDataURL(event.target.files[0]);
-        }
+      const geometry = new THREE.SphereGeometry(1, 32, 32);
+      const material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+      apple = new THREE.Mesh(geometry, material);
+      scene.add(apple);
 
-        // Dynamische Bilder für den Scanner-Bereich
-        function loadScannerImages() {
-            const scannerImages = [
-                "https://upload.wikimedia.org/wikipedia/commons/a/ae/3d_scanning.jpg",
-                "https://upload.wikimedia.org/wikipedia/commons/0/0d/3D_Scanner_LIDAR.jpg"
-            ];
-            const container = document.getElementById('scannerImages');
-            scannerImages.forEach(function(url) {
-                let img = document.createElement("img");
-                img.src = url;
-                img.alt = "Scanner Bild";
-                container.appendChild(img);
-            });
-        }
+      camera.position.z = 4;
+      animate();
+    }
 
-        // Dynamische Bilder für den Rekonstruktor-Bereich
-        function loadRekonstruktorImages() {
-            const rekonstruktorImages = [
-                "https://upload.wikimedia.org/wikipedia/commons/7/7d/3D_Printing_BC_2015.jpg",
-                "https://upload.wikimedia.org/wikipedia/commons/e/e2/3D_Printer.jpg"
-            ];
-            const container = document.getElementById('rekonstruktorImages');
-            rekonstruktorImages.forEach(function(url) {
-                let img = document.createElement("img");
-                img.src = url;
-                img.alt = "Rekonstruktor Bild";
-                container.appendChild(img);
-            });
-        }
+    function animate() {
+      requestAnimationFrame(animate);
+      apple.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
 
-        // 3D Modell des Apfels laden und rendern
-        function init3DModel() {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('model-container').appendChild(renderer.domElement);
+    function updateApple() {
+      const color = document.getElementById('color').value;
+      const size = document.getElementById('size').value;
+      const texture = document.getElementById('texture').value;
+      const taste = document.getElementById('taste').value;
 
-            // Einfache Apfel-Darstellung: Geometrie als Beispiel
-            const geometry = new THREE.SphereGeometry(1, 32, 32);
-            const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            const apple = new THREE.Mesh(geometry, material);
-            scene.add(apple);
+      const colors = {
+        red: 0xff0000,
+        green: 0x00ff00,
+        yellow: 0xffff00
+      };
+      apple.material.color.setHex(colors[color]);
 
-            camera.position.z = 5;
+      const sizes = {
+        small: 0.6,
+        medium: 1,
+        large: 1.5
+      };
+      apple.scale.set(sizes[size], sizes[size], sizes[size]);
 
-            function animate() {
-                requestAnimationFrame(animate);
-                apple.rotation.x += 0.01;
-                apple.rotation.y += 0.01;
-                renderer.render(scene, camera);
-            }
-            animate();
-        }
+      if (texture === 'rough') {
+        apple.material.roughness = 1;
+      } else {
+        apple.material.roughness = 0.3;
+      }
 
-        // Initiale Bilder und 3D-Modell laden
-        loadScannerImages();
-        loadRekonstruktorImages();
-        init3DModel();
-    </script>
+      console.log("Geschmack: ", taste);
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("fileInfo").textContent = `Datei geladen: ${file.name}`;
+        console.log("Dateiinhalt:", e.target.result);
+      }
+      reader.readAsText(file);
+    }
+
+    window.onload = init;
+  </script>
 </body>
 </html>
